@@ -1,0 +1,72 @@
+# DashedAurora11Group
+
+
+```text
+domainstorytelling/Group/DashedAurora11Group
+```
+
+```text
+include('domainstorytelling/Group/DashedAurora11Group')
+```
+
+
+
+| DashedAurora11Group |
+| :---: |
+| ![illustration for DashedAurora11Group](../../domainstorytelling/Group/DashedAurora11Group.Local.png) |
+
+
+
+
+
+
+
+## DashedAurora11Group
+
+### Load remotely
+```plantuml
+@startuml
+' configures the library
+!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/master/distribution"
+
+' loads the library's bootstrap
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+' loads the package bootstrap
+include('domainstorytelling/bootstrap')
+
+' loads the Item which embeds the element DashedAurora11Group
+include('domainstorytelling/Group/DashedAurora11Group')
+
+DashedAurora11Group('DashedAurora11Group', 'Dashed Aurora11 Group', 'an optional tech label') {
+  note as note
+  the content of the boundary
+  end note
+}
+@enduml
+```
+
+### Load locally
+```plantuml
+@startuml
+' configures the library
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.."
+
+' loads the library's bootstrap
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+' loads the package bootstrap
+include('domainstorytelling/bootstrap')
+
+' loads the Item which embeds the element DashedAurora11Group
+include('domainstorytelling/Group/DashedAurora11Group')
+
+DashedAurora11Group('DashedAurora11Group', 'Dashed Aurora11 Group', 'an optional tech label') {
+  note as note
+  the content of the boundary
+  end note
+}
+@enduml
+```
+

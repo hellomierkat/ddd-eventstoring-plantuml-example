@@ -1,0 +1,88 @@
+@startuml
+
+!include ./libs-plantuml.puml
+
+
+DomainEvent('Event_OrderApplied')[
+        申请单已申请
+]
+
+DomainEvent('Event_OrderDistributed')[
+        申请单已分配
+]
+
+DomainEvent('Event_OrderHandled')[
+        工程师已处理
+]
+
+DomainEvent('Event_MessageSent')[
+        消息已发送
+]
+
+DomainEvent('Event_OrderReDistributed')[
+        申请单已重新分配
+]
+
+
+DomainEvent('Event_OrderFollowed')[
+        申请单已跟进
+]
+
+DomainEvent('Event_OrderFinished')[
+        申请单已完成
+]
+
+DomainEvent('Event_OrderClassified')[
+        申请单已故障分类
+]
+
+DomainEvent('Event_OrderEvaluated')[
+        申请单已评价
+]
+
+
+
+Command('Command_OrderApplie')[
+        申请单申请
+]
+
+Command('Command_OrderDistribute')[
+        申请单分配
+]
+
+Command('Command_OrderHandle')[
+        工程师处理
+]
+
+Command('Command_MessageSend')[
+        发送消息
+]
+
+Command('Command_OrderReDistribute')[
+        申请单重新分配
+]
+
+
+Command('Command_OrderFollow')[
+        申请单跟进
+]
+
+Command('Command_OrderFinish')[
+        申请单完成
+]
+
+Command('Command_OrderClassify')[
+        申请单故障分类
+]
+
+Command('Command_OrderEvaluate')[
+        申请单评价
+]
+
+Policy('Command_AutomaticAssign') [
+        申请单自动分配工程师
+]
+
+
+
+@enduml

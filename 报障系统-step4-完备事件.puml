@@ -1,0 +1,195 @@
+@startuml
+
+!include ./libs-plantuml.puml
+
+
+DomainEvent('Event_OrderApplied')[
+        申请单已申请
+        --
+        申请单编号
+        申请单状态
+        联系电话
+        故障描述
+        图片描述
+        申请时间
+        申请人工号
+        申请人姓名
+]
+
+DomainEvent('Event_OrderDistributed')[
+        申请单已分配
+        --
+        申请单编号
+        工程师工号
+        工程师姓名
+        工程师电话
+]
+
+DomainEvent('Event_OrderHandled')[
+        工程师已处理
+        --
+        申请单编号
+        工程师工号
+]
+
+DomainEvent('Event_MessageSent')[
+        消息已发送
+        --
+        申请单编号
+        工程师工号
+        申请人工号
+        消息内容
+]
+
+DomainEvent('Event_OrderReDistributed')[
+        申请单已重新分配
+        --
+        申请单编号
+        其他有效的工程师工号
+        其他有效的工程师姓名
+        其他有效的工程师电话
+]
+
+
+DomainEvent('Event_OrderFollowed')[
+        申请单已跟进
+        --
+        申请单编号
+        工程师编号
+        跟进内容
+]
+
+DomainEvent('Event_OrderFinished')[
+        申请单已完成
+        --
+        申请单编号
+        工程师编号
+        完成时间
+]
+
+DomainEvent('Event_OrderClassified')[
+        申请单已故障分类
+        --
+        申请单编号
+        故障类型编号
+]
+
+DomainEvent('Event_OrderEvaluated')[
+        申请单已评价
+        --
+        申请单编号
+        申请人工号
+        评价内容
+        评价时间
+]
+
+
+
+Command('Command_OrderApplie')[
+        申请单申请
+        --
+        申请单编号
+        -- rule --
+        1，联系电话必填
+        2，故障描述必填
+        3，图片最多能上传2张
+]
+
+Command('Command_OrderDistribute')[
+        申请单分配
+        --
+        申请单编号
+        -- rule --
+        1，申请单当前无工程师
+]
+
+Command('Command_OrderHandle')[
+        工程师处理
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单处于非完成状态
+        2，工程师有效
+]
+
+Command('Command_MessageSend')[
+        发送消息
+        --
+        用户工号
+        工程师工号
+        申请单编号
+        -- rule --
+        1，申请单申请完成时发送
+
+]
+
+Command('Command_OrderReDistribute')[
+        申请单重新分配
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单有工程师
+        2，不能分配给自己
+        3，分配的工程师需有效
+        4，申请单状态为处理中
+]
+
+
+Command('Command_OrderFollow')[
+        申请单跟进
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单状态为处理中
+        2，申请单的当前处理工程师为操作人
+        3，跟进内容不能为空
+]
+
+Command('Command_OrderFinish')[
+        申请单完成
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单状态为处理中
+        2，执行操作需为申请单的当前处理工程师
+]
+
+Command('Command_OrderClassify')[
+        申请单故障分类
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单状态为处理中
+        2，执行操作需为申请单的当前处理工程师
+]
+
+Command('Command_OrderEvaluate')[
+        申请单评价
+        --
+        申请单编号
+        用户工号
+        -- rule --
+        1，申请单状态为已完成待评价
+        2，只有申请人能够进行评价
+]
+
+Policy('Policy_AutoDistributeEngineer') [
+        申请单自动分配工程师
+]
+
+
+Person('Person_User')[
+        用户
+]
+
+Person('Person_Engineer')[
+        工程师
+]
+
+
+@enduml

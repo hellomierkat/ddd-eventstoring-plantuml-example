@@ -1,0 +1,345 @@
+@startuml
+
+!include ./libs-plantuml.puml
+
+
+DomainEvent('Event_OrderApplied')[
+        申请单已申请
+        --
+        申请单编号
+        申请单状态
+        联系电话
+        故障描述
+        图片描述
+        申请时间
+        申请人工号
+        申请人姓名
+]
+
+DomainEvent('Event_OrderDistributed')[
+        申请单已分配
+        --
+        申请单编号
+        工程师工号
+        工程师姓名
+        工程师电话
+]
+
+DomainEvent('Event_OrderHandled')[
+        工程师已处理
+        --
+        申请单编号
+        工程师工号
+]
+
+DomainEvent('Event_MessageSent')[
+        消息已发送
+        --
+        申请单编号
+        工程师工号
+        申请人工号
+        消息内容
+]
+
+DomainEvent('Event_OrderReDistributed')[
+        申请单已重新分配
+        --
+        申请单编号
+        其他有效的工程师工号
+        其他有效的工程师姓名
+        其他有效的工程师电话
+]
+
+
+DomainEvent('Event_OrderFollowed')[
+        申请单已跟进
+        --
+        申请单编号
+        工程师编号
+        跟进内容
+]
+
+DomainEvent('Event_OrderFinished')[
+        申请单已完成
+        --
+        申请单编号
+        工程师编号
+        完成时间
+]
+
+DomainEvent('Event_OrderClassified')[
+        申请单已故障分类
+        --
+        申请单编号
+        故障类型编号
+]
+
+DomainEvent('Event_OrderEvaluated')[
+        申请单已评价
+        --
+        申请单编号
+        申请人工号
+        评价内容
+        评价时间
+]
+
+
+
+Command('Command_OrderApplie')[
+        申请单申请
+        --
+        申请单编号
+        -- rule --
+        1，联系电话必填
+        2，故障描述必填
+        3，图片最多能上传2张
+]
+
+Command('Command_OrderDistribute')[
+        分配申请单
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单当前无工程师
+        2，申请单处于非完成状态
+        3，工程师有效
+]
+
+' Command('Command_OrderHandle')[
+'         工程师处理
+'         --
+'         申请单编号
+'         工程师工号
+'         -- rule --
+'         1，申请单处于非完成状态
+'         2，工程师有效
+' ]
+
+Command('Command_MessageSend')[
+        发送消息
+        --
+        用户工号
+        工程师工号
+        申请单编号
+        -- rule --
+        1，申请单申请完成时发送
+
+]
+
+Command('Command_OrderReDistribute')[
+        申请单重新分配
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单有工程师
+        2，不能分配给自己
+        3，分配的工程师需有效
+        4，申请单状态为处理中
+]
+
+
+Command('Command_OrderFollow')[
+        申请单跟进
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单状态为处理中
+        2，申请单的当前处理工程师为操作人
+        3，跟进内容不能为空
+]
+
+Command('Command_OrderFinish')[
+        申请单完成
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单状态为处理中
+        2，执行操作需为申请单的当前处理工程师
+]
+
+Command('Command_OrderClassify')[
+        申请单故障分类
+        --
+        申请单编号
+        工程师工号
+        -- rule --
+        1，申请单状态为处理中
+        2，执行操作需为申请单的当前处理工程师
+]
+
+Command('Command_OrderEvaluate')[
+        申请单评价
+        --
+        申请单编号
+        用户工号
+        -- rule --
+        1，申请单状态为已完成待评价
+        2，只有申请人能够进行评价
+]
+
+Policy('Policy_AutoDistributeEngineer') [
+        申请单自动分配工程师
+]
+
+
+Person('Person_User')[
+        用户
+]
+
+Person('Person_Engineer')[
+        工程师
+]
+
+' Query('Query_EngineerAreaSetting') [
+'         工程师区域设置
+' ]
+
+
+
+' 聚合模块识别（讨论业务中的名词以及业务场景）
+
+Aggregate('Agg_Order')[
+        申请单聚合模块
+        --
+        申请单编号
+        工程师编号
+        完成时间
+        申请单状态
+        申请人联系电话
+        故障描述
+        图片描述
+        申请时间
+        申请人工号
+        申请人姓名
+        --
+        (1)申请单评价
+        (*)申请单跟进
+        (*)分配记录
+]
+
+Aggregate('Agg_OrderFollows') [
+        申请单跟进聚合模块
+        --
+        申请单编号
+        工程师编号
+        跟进内容
+]
+
+Aggregate('Agg_OrderEvaluates') [
+        申请单评价聚合模块
+        --
+        申请单编号
+        评价人工号
+        评价内容
+        评价时间
+]
+
+Aggregate('Agg_OrderClassifies') [
+        故障类型聚合模块
+        --
+        故障编号
+        申请单编号
+]
+
+
+' 技术提议将工程师区域设置也识别为聚合模块，因为目前没有哪个系统资源提供该数据
+Aggregate('Agg_EngineerAreaSetting') [
+        工程师区域设置聚合模块
+        --
+        工程师工号
+        区域名称
+        工程师姓名
+        工程师电话
+]
+
+Aggregate('Agg_OrderDistribute') [
+        申请单分配聚合模块
+        --
+        申请单编号
+        工程师编号
+        分配时间
+]
+
+
+Query('Query_EngineerServerStatusModel) [
+        工程师服务状态总览
+        --
+        工程师编号
+        工程师姓名
+        好评数量
+        中评数量
+        差评数量
+]
+
+
+' 用户发起申请
+Person_User -down-> Command_OrderApplie
+Command_OrderApplie -down-> Agg_Order
+Agg_Order -down-> Event_OrderApplied
+Event_OrderApplied -down-> Policy_AutoDistributeEngineer
+
+Policy_AutoDistributeEngineer -down-> Command_OrderDistribute
+Command_OrderDistribute -down-> Agg_EngineerAreaSetting
+Agg_EngineerAreaSetting -down-> Event_OrderHandled
+Agg_EngineerAreaSetting -down-> Event_OrderDistributed
+
+
+Policy_AutoDistributeEngineer -down-> Command_MessageSend
+Command_MessageSend -down-> Event_MessageSent
+
+
+' 工程师重新分配
+Person_Engineer -down-> Command_OrderReDistribute
+Command_OrderReDistribute -down-> Agg_Order
+Agg_Order -down-> Event_OrderReDistributed
+
+
+' 工程师跟进
+Person_Engineer -down-> Command_OrderFollow
+Command_OrderFollow -down-> Agg_Order
+Agg_Order -down-> Event_OrderFollowed
+
+
+' 工程师完成申请单
+Person_Engineer -down-> Command_OrderFinish
+Command_OrderFinish -down-> Agg_Order
+Agg_Order -down-> Event_OrderFinished
+
+
+' 工程师对申请单进行故障分类
+Person_Engineer -down-> Command_OrderClassify
+Command_OrderClassify -down-> Agg_OrderClassifies
+Agg_OrderClassifies -down-> Event_OrderClassified
+
+
+' 用户对申请单进行评价
+Person_User -down-> Command_OrderEvaluate
+Command_OrderEvaluate -down-> Agg_Order
+Agg_Order -down-> Event_OrderEvaluated
+Event_OrderEvaluated -down-> Query_EngineerServerStatusModel
+
+
+
+' 我们发现所有的事件从已经从聚合发出，但聚合并没有提供事件执行的条件
+' 因此，我们需要在聚合中添加条件，来判断是否需要执行事件
+
+
+' 针对识别的聚合，跟业务专家沟通业务场景，厘定聚合之间的关系
+' 1，技术问：评价内容是否会做单独的显示管理？ 业务说：不会，它跟随申请单主体
+' 2，技术问：那跟进呢？ 业务说：不会，它也跟随申请单主体
+' 3，技术问：那评价呢？ 业务说：具体评价不会，但最好需要一个统计工程师好评/中评/差评的统计
+' 4，技术问：我们对重新分配貌似没有管理？ 是否需要显示这些变更记录？
+'    业务说：记录的数据肯定是需要保存的，是不是我们少一个聚合？
+'    技术说：是的，那它是否需要单独显示？
+'    业务说：不需要，它跟随申请单主体
+
+Agg_Order o.. Agg_OrderFollows
+Agg_Order o.. Agg_OrderEvaluates
+Agg_Order o.. Agg_OrderDistribute
+
+
+@enduml

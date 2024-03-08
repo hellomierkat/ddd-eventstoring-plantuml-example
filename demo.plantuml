@@ -1,0 +1,45 @@
+@startuml
+
+!include ./libs-plantuml.puml
+
+' display elements
+FacadeCommand('FacadeCommand')
+Command('Command')
+Result('Result')
+Event('Event')
+DomainEvent('DomainEvent')
+IntegrationEvent('IntegrationEvent')
+Query('Query')
+ReadModel('ReadModel')
+UserInterface('UserInterface')
+Aggregate('Aggregate')
+Service('Service')
+Policy('Policy')
+Saga('Saga')
+Process('Process')
+Timer('Timer')
+Person('Person')
+System('System')
+Comment('Comment')
+
+
+' FacedeCommand('FC_FacadeCommand') [
+'     外观命令
+' ]
+
+Command('Command_Command') [
+    命令/指令
+]
+
+' Result('RS_Result') []
+
+Event('Event_Event') [
+    事件
+]
+
+DomainEvent('DEvent_DomainEvent') [
+    领域事件
+]
+
+
+@enduml
