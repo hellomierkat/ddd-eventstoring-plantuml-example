@@ -265,7 +265,7 @@ Aggregate('Agg_OrderDistribute') [
 ]
 
 
-Query('Query_EngineerServerStatusModel) [
+Query('Query_EngineerServerStatusModel') [
         工程师服务状态总览
         --
         工程师编号
@@ -341,5 +341,12 @@ Agg_Order o.. Agg_OrderFollows
 Agg_Order o.. Agg_OrderEvaluates
 Agg_Order o.. Agg_OrderDistribute
 
+
+' next >>>
+' 技术问：命令是否存在顺序性？ 比如 先分类才能完成？
+' 业务说：是的，我们需要“完成操作的时候包含了分类的操作，不能提前分类”，因为涉及重新分配，分类应该是最后的处理工程师确定
+' 技术问：是不是只需要保证：“完成前有分类即可”
+' 业务说：是的，分类可以随时做，但完成前必须有分类
+' >>> 添加命令的逻辑
 
 @enduml

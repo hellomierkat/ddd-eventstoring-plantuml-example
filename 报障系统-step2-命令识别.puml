@@ -47,7 +47,7 @@ Command('Command_OrderApplie')[
 ]
 
 Command('Command_OrderDistribute')[
-        申请单分配
+        分配申请单
 ]
 
 Command('Command_OrderHandle')[

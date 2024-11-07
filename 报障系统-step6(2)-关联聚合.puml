@@ -254,7 +254,8 @@ Command_MessageSend -down-> Event_MessageSent
 
 ' 工程师重新分配
 Person_Engineer -down-> Command_OrderReDistribute
-Command_OrderReDistribute -down-> Event_OrderReDistributed
+Command_OrderReDistribute -down-> Agg_Order
+Agg_Order -down-> Event_OrderReDistributed
 
 
 ' 工程师跟进
@@ -281,7 +282,7 @@ Command_OrderEvaluate -down-> Agg_OrderEvaluates
 Agg_OrderEvaluates -down-> Event_OrderEvaluated
 
 
-
+' next >>>
 ' 我们发现所有的事件从已经从聚合发出，但聚合并没有提供事件执行的条件
 ' 因此，我们需要在聚合中添加条件，来判断是否需要执行事件
 
